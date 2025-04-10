@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Kirjautuminen</title>
+  <title>Reseptipankki</title>
 </head>
 
 <body>
@@ -14,12 +14,16 @@
   <p>
     <a href="/logout">Kirjaudu ulos</a>
   </p>
-  {% else %}
+  <p>
+    <a href="/new_item">Luo resepti</a>
   </p>
+  {% else %}
+  <p>
     <a href="/register">Luo tunnus</a>
+  </p>
   <p>
     <a href="/login">Kirjaudu sisään</a>
-
+  </p>
   {% endif %}
 </body>
 
