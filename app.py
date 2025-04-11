@@ -29,10 +29,23 @@ def create_item():
     ingredients = request.form["ingredients"]
     instructions = request.form["instructions"]
     user_id = session["user_id"]
-
     items.add_item(title, ingredients, instructions, user_id)
-
     return redirect("/")
+
+@app.route("/edit_item/<int:item_id>")
+def edit_item(item_id):
+    item = items.get_item(item_id)
+    return render_template("edit_item.html", item=item)
+
+@app.route("/update_item", methods=["POST"])
+def update_item():
+    item_id = request.form["item_id"]
+    title = request.form["title"]
+    ingredients = request.form["ingredients"]
+    instructions = request.form["instructions"]
+
+    items.update_item(item_id, title, ingredients, instructions)
+    return redirect("/item/" + str(item_id))
 
 @app.route("/register")
 def register():

@@ -13,9 +13,11 @@ def get_items():
 
 def get_item(item_id):
     sql = """SELECT 
+                I.id,
                 I.title,
                 I.ingredients,
                 I.instructions,
+                U.id user_id,
                 U.username
             FROM 
                 items I, users U
@@ -25,3 +27,14 @@ def get_item(item_id):
                 I.id = ?
         """
     return db.query(sql, [item_id])[0]
+
+def update_item(item_id, title, ingredients, instructions):
+    sql = """UPDATE
+                items
+            SET
+                title = ?,
+                ingredients = ?,
+                instructions = ?
+            WHERE
+                id = ? """
+    db.execute(sql, [title, ingredients, instructions, item_id])
