@@ -25,6 +25,12 @@
     <a href="/login">Kirjaudu sisään</a>
   </p>
   {% endif %}
+  <h2>Reseptit</h2>
+  <ul>
+    {% for item in items %}
+    <li><a href="/item/{{ item.id }}">{{ item.title }}</a></li>
+    {% endfor %}
+  </ul>
 </body>
 
 </html>
