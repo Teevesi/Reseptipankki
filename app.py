@@ -37,7 +37,7 @@ def create_item():
     if not title or len(title) > 50:
         abort(403)
     ingredients = request.form["ingredients"]
-    if not ingredients or len(ingredients) > 1000:
+    if not ingredients or len(ingredients) > 2000:
         abort(403)
     instructions = request.form["instructions"]
     if not instructions or len(instructions) > 2000:
@@ -66,8 +66,14 @@ def update_item():
     if item["user_id"] != session["user_id"]:
         abort(403)
     title = request.form["title"]
+    if not title or len(title) > 50:
+        abort(403)
     ingredients = request.form["ingredients"]
+    if not ingredients or len(ingredients) > 2000:
+        abort(403)
     instructions = request.form["instructions"]
+    if not instructions or len(instructions) > 2000:
+        abort(403)
 
     items.update_item(item_id, title, ingredients, instructions)
     return redirect("/item/" + str(item_id))
