@@ -37,7 +37,8 @@ def show_item(item_id):
     item = items.get_item(item_id)
     if not item:
         abort(404)
-    return render_template("show_item.html", item=item)
+    classes = items.get_classes(item_id)
+    return render_template("show_item.html", item=item, classes=classes)
 
 @app.route("/create_item", methods=["POST"])
 def create_item():
@@ -52,7 +53,17 @@ def create_item():
     if not instructions or len(instructions) > 2000:
         abort(403)
     user_id = session["user_id"]
-    items.add_item(title, ingredients, instructions, user_id)
+
+    classes = []
+    section = request.form["section"]
+    if section:
+        classes.append(("Osasto", section))
+    difficulty = request.form["difficulty"]
+    if difficulty:
+        classes.append(("Vaikeusaste", difficulty))
+
+    items.add_item(title, ingredients, instructions, user_id, classes)
+
     return redirect("/")
 
 @app.route("/edit_item/<int:item_id>")
