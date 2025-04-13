@@ -18,3 +18,10 @@ CREATE TABLE item_classes (
     title TEXT,
     value TEXT
 );
+
+CREATE TABLE classes (
+    id INTEGER PRIMARY KEY,
+    item_id INTEGER REFERENCES items,
+    title TEXT,
+    value TEXT
+);

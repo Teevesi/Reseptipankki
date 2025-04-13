@@ -1,7 +1,6 @@
 import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, session, abort
-from werkzeug.security import generate_password_hash, check_password_hash
 import db
 import config
 import items
@@ -30,7 +29,8 @@ def show_user(user_id):
 @app.route("/new_item")
 def new_item():
     require_login()
-    return render_template("new_item.html")
+    classes = items.get_all_classes()
+    return render_template("new_item.html", classes=classes)
 
 @app.route("/item/<int:item_id>")
 def show_item(item_id):
@@ -55,13 +55,10 @@ def create_item():
     user_id = session["user_id"]
 
     classes = []
-    section = request.form["section"]
-    if section:
-        classes.append(("Osasto", section))
-    difficulty = request.form["difficulty"]
-    if difficulty:
-        classes.append(("Vaikeusaste", difficulty))
-
+    for entry in request.form.getlist("classes"):
+        if entry:
+            parts = entry.split(":")
+            classes.append((parts[0], parts[1]))
     items.add_item(title, ingredients, instructions, user_id, classes)
 
     return redirect("/")

@@ -20,24 +20,18 @@
       Ohjeet: <br />
       <textarea name = "instructions" rows="8" cols="40" maxlength="2000" required></textarea>
     </p>
+    {% for class in classes %}
     <p>
-      Osasto: <br />
-      <select name="section">
+      {{ class }}: <br />
+      <select name="classes">
         <option value="">[valitse]</option>
-        <option value="liharuoat">liharuoat</option>
-        <option value="kalaruoat">kalaruoat</option>
-        <option value="kasvisruoat">kasvisruoat</option>
-      </select>
+      {% for option in classes[class] %}
+      <option value="{{ class }}:{{ option }}">{{ option }}</option>
+      {% endfor %}
+    </select>
     </p>
-    <p>
-      Vaikeusaste: <br />
-      <select name="difficulty">
-        <option value="">[valitse]</option>
-        <option value="ammattilainen">ammattilainen</option>
-        <option value="kotikokki">kotikokki</option>
-        <option value="aloittelija">aloittelija</option>
-      </select>
-    </p>
+    {% endfor %}
+
     <input type="submit" value="Luo resepti" />
   </form>
 </body>
