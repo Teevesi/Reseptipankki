@@ -5,6 +5,7 @@ import db
 import config
 import items
 import users
+import re
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -38,7 +39,8 @@ def show_item(item_id):
     if not item:
         abort(404)
     classes = items.get_classes(item_id)
-    return render_template("show_item.html", item=item, classes=classes)
+    reviews = items.get_reviews(item_id)
+    return render_template("show_item.html", item=item, classes=classes, reviews=reviews)
 
 @app.route("/create_item", methods=["POST"])
 def create_item():
@@ -149,6 +151,24 @@ def find_item():
         results = []
     return render_template("find_item.html", query=query, results = results)
 
+@app.route("/create_review", methods=["POST"])
+def create_review():
+    require_login()
+    review_stars = request.form["review_stars"]
+    if not review_stars and not re.search("^[1-5]$", review_stars):
+        abort(403)
+    review_comment = request.form["review_comment"]
+    if len(review_comment) > 1000:
+        abort(403)
+    item_id = request.form["item_id"]
+    item = items.get_item(item_id)
+    if not item:
+        abort(403)
+    user_id = session["user_id"]
+
+    items.add_review(item_id, user_id, review_stars, review_comment)
+
+    return redirect("/item/" + str(item_id))
 
 @app.route("/register")
 def register():

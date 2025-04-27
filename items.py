@@ -12,6 +12,20 @@ def add_item(title, ingredients, instructions, user_id, classes):
     for title, value in classes:
         db.execute(sql, [item_id, title, value])
 
+def add_review(item_id, user_id, review_stars, review_comment):
+    sql = """INSERT INTO reviews (item_id, user_id, stars, comment)
+             VALUES (?, ?, ?, ?)"""
+    db.execute(sql, [item_id, user_id, review_stars, review_comment])
+
+def get_reviews(item_id):
+    sql = """SELECT reviews.stars, reviews.comment,
+                    users.id user_id, users.username
+            FROM reviews, users
+            WHERE reviews.item_id = ?
+            AND reviews.user_id = users.id
+            ORDER BY reviews.id DESC"""
+    return db.query(sql, [item_id])
+
 def get_items():
     sql = "SELECT id, title FROM items ORDER BY title"
             

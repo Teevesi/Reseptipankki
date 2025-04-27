@@ -34,6 +34,30 @@
     </ul>
   </p>
   {% endif %}
+  <h2>Arvostelut</h2>
+  <p>
+    <ul>
+      {% for review in reviews %}
+      <li>{{ review.stars }}/5, {{ review.comment }}, <a href="/user/{{ review.user_id }}">{{ review.username }}</a></li>
+      {% endfor %}
+    </ul>
+  </p>
+  <h2>Arvostele resepti</h2>
+  <form action="/create_review" method="post">
+    <input type="hidden" name="item_id" value="{{ item.id }}">
+    <p>
+      Arvio:
+      <input type="text" name="review_stars" size="8" pattern="[1-5]" required /> /5
+    </p>
+    <p>
+      Kommentti:
+      <input type="text" name="review_comment" size="40" />
+    </p>
+    <p>
+      <input type="submit" value="Arvostele" />
+    </p>
+  </form>
+
   <p>
     <a href="/">Takaisin</a>
   </p>
