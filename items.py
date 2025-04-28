@@ -44,6 +44,10 @@ def add_image(item_id, image):
     sql = "INSERT INTO images (item_id, image) VALUES (?, ?)"
     db.execute(sql, [item_id, image])
 
+def remove_image(item_id, image_id):
+    sql = "DELETE FROM images WHERE id = ? AND item_id = ?"
+    db.execute(sql, [image_id, item_id])
+
 def get_classes(item_id):
     sql = "SELECT title, value FROM item_classes WHERE item_id = ?"
     return db.query(sql, [item_id])
