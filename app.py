@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session, abort
+from flask import redirect, make_response, render_template, request, session, abort
 import db
 import config
 import items
@@ -40,7 +40,51 @@ def show_item(item_id):
         abort(404)
     classes = items.get_classes(item_id)
     reviews = items.get_reviews(item_id)
-    return render_template("show_item.html", item=item, classes=classes, reviews=reviews)
+    images = items.get_images(item_id)
+    return render_template("show_item.html", item=item, classes=classes,
+                            reviews=reviews, images=images)
+
+@app.route("/images/<int:item_id>")
+def edit_images(item_id):
+    require_login()
+    item = items.get_item(item_id)
+    if not item:
+        abort(404)
+    if item["user_id"] != session["user_id"]:
+        abort(403)
+
+    images = items.get_images(item_id)
+
+    return render_template("images.html", item=item, images=images)
+
+@app.route("/add_image", methods=["POST"])
+def add_image():
+    require_login()
+    item_id = request.form["item_id"]
+    item = items.get_item(item_id)
+    if not item:
+        abort(404)
+    if item["user_id"] != session["user_id"]:
+        abort(403)
+    file = request.files["image"]
+    if not file.filename.endswith(".png"):
+        return "VIRHE: väärä tiedostomuoto"
+    image = file.read()
+    if len(image) > 1000 * 1024:
+        return "VIRHE: liian suuri kuva"
+
+    items.add_image(item_id, image)
+    return redirect("/images/" + str(item_id))
+
+@app.route("/image/<int:image_id>")
+def show_image(image_id):
+    image = items.get_image(image_id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/png")
+    return response
 
 @app.route("/create_item", methods=["POST"])
 def create_item():
