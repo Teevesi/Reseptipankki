@@ -24,18 +24,13 @@
   <h3>Ohjeet:</h3>
   {{ item.instructions }}
 </p>
-<p>
-  Reseptin lisännyt: <a href="/user/{{ item.user_id}}">{{ item.username }}</a>
-</p>
+<ul>
+  <li>Reseptin lisännyt: <a href="/user/{{ item.user_id}}">{{ item.username }}</a></li>
 {% if classes %}
-<p>
-  Luokat:
-  <ul>
-    {% for class in classes %}
-    <li>{{ class.title }}: {{ class.value }}</li>
-    {% endfor %}
-  </ul>
-</p>
+  {% for class in classes %}
+  <li>{{ class.title }}: {{ class.value }}</li>
+  {% endfor %}
+</ul>
 {% endif %}
 <h3>Arvostelut</h3>
 <p>
@@ -48,6 +43,7 @@
     {% endfor %}
   </ul>
 </p>
+{% if session.user_id %}
 <h3>Arvostele resepti</h3>
 <form action="/create_review" method="post">
   <input type="hidden" name="item_id" value="{{ item.id }}">
@@ -63,5 +59,6 @@
     <input type="submit" value="Arvostele" />
   </p>
 </form>
+{% endif %}
 
 {% endblock %}
