@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Reseptipankki</title>
-</head>
+{% block title %}Tunnus varattu{% endblock %}
 
-<body>
-    <h1>Virhe: Tunnus varattu</h1>
-  <a href="/register">Takaisin</a>
-</body>
+{% block content %}
 
-</html>
+<h2>Virhe: Tunnus varattu</h2>
+<a href="/register">Yritä uudestaan</a>
+
+{% endblock %}

@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Reseptipankki</title>
-</head>
+{% block title %}Väärä tunnus tai salasana{% endblock %}
 
-<body>
-    <h1>Virhe: Väärä tunnus tai salasana</h1>
-  <a href="/login">Takaisin</a>
-</body>
+{% block content %}
 
-</html>
+<h1>Virhe: Väärä tunnus tai salasana</h1>
+<a href="/login">Yritä uudestaan</a>
+
+{% endblock %}
