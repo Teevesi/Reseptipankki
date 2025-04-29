@@ -33,9 +33,13 @@
 </ul>
 {% endif %}
 <h3>Arvostelut</h3>
+{% if average %}
 <p>
   Arvosana: {{ average }} / 5
+  {% else %}
+  Arvosana: 0 / 5
 </p>
+{% endif %}
 <p>
   <ul>
     {% for review in reviews %}

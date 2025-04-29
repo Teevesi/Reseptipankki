@@ -6,4 +6,4 @@ INSERT INTO classes (title, value) VALUES ('Osasto', 'Kasvisruoat');
 
 INSERT INTO classes (title, value) VALUES ('Vaikeusaste', 'Ammattilainen');
 INSERT INTO classes (title, value) VALUES ('Vaikeusaste', 'Kotikokki');
-INSERT INTO classes (title, value) VALUES ('Vaikeusaste', 'Aloittejila');
+INSERT INTO classes (title, value) VALUES ('Vaikeusaste', 'Aloittelija');

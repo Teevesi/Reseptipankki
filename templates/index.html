@@ -10,7 +10,11 @@
 <div class="item">
   <a href="/item/{{ item.id }}">{{ item.title }}</a> <br />
   Tekijä:  <a href="/user/{{ item.user_id }}">{{ item.username }}</a> <br />
+  {% if item.average_stars %}
   Arvosana: {{ item.average_stars }} / 5
+  {% else %}
+  Arvosana: 0 / 5
+  {% endif %}
 </div>
 {% endfor %}
 

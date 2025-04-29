@@ -11,6 +11,7 @@ def add_item(title, ingredients, instructions, user_id, classes):
             VALUES (?, ?, ?)"""
     for title, value in classes:
         db.execute(sql, [item_id, title, value])
+    return item_id
 
 def add_review(item_id, user_id, review_stars, review_comment):
     sql = """INSERT INTO reviews (item_id, user_id, stars, comment)
@@ -107,6 +108,9 @@ def remove_item(item_id):
     db.execute(sql, [item_id])
 
     sql = """DELETE FROM reviews WHERE item_id = ?"""
+    db.execute(sql, [item_id])
+
+    sql = """DELETE FROM images WHERE item_id = ?"""
     db.execute(sql, [item_id])
 
     sql = """DELETE FROM items WHERE id = ?"""
