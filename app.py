@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, make_response, render_template, request, session, abort
+from flask import redirect, flash, make_response, render_template, request, session, abort
 import db
 import config
 import items
@@ -69,10 +69,12 @@ def add_image():
         abort(403)
     file = request.files["image"]
     if not file.filename.endswith(".png"):
-        return "VIRHE: väärä tiedostomuoto"
+        flash("VIRHE: väärä tiedostomuoto")
+        return redirect("/images/" + str(item_id))
     image = file.read()
     if len(image) > 1000 * 1024:
-        return "VIRHE: liian suuri kuva"
+        flash("VIRHE: liian suuri kuva")
+        return redirect("/images/" + str(item_id))
 
     items.add_image(item_id, image)
     return redirect("/images/" + str(item_id))
@@ -240,12 +242,13 @@ def create():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
-
+        flash("VIRHE: salasanat eivät ole samat")
+        return redirect("/register")
     try:
         users.create_user(username, password1)
     except sqlite3.IntegrityError:
-        return render_template("register_error.html")
+        flash("VIRHE: tunnus varattu")
+        return redirect("/register")
     return render_template("create.html")
 
 
@@ -264,7 +267,8 @@ def login():
             session["username"] = username
             return redirect("/")
         else:
-            return render_template("login_error.html")
+            flash("VIRHE: väärä tunnus tai salasana")
+            return render_template("login.html")
 
 @app.route("/logout")
 def logout():
