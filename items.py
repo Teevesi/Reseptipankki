@@ -40,10 +40,8 @@ def get_items():
                     AVG(reviews.stars) average_stars
             FROM items JOIN users ON items.user_id = users.id
                        LEFT JOIN reviews ON items.id = reviews.item_id
-            WHERE items.user_id = users.id
-            AND items.id = reviews.item_id
             GROUP BY items.id
-            ORDER BY title
+            ORDER BY items.id DESC
 """
     return db.query(sql)
 
@@ -106,6 +104,9 @@ def update_item(item_id, title, ingredients, instructions, classes):
 
 def remove_item(item_id):
     sql = """DELETE FROM item_classes WHERE item_id = ?"""
+    db.execute(sql, [item_id])
+
+    sql = """DELETE FROM reviews WHERE item_id = ?"""
     db.execute(sql, [item_id])
 
     sql = """DELETE FROM items WHERE id = ?"""
