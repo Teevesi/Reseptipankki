@@ -15,6 +15,7 @@
 {% for image in images %}
 <img src="/image/{{ image.id }}" />
 {% endfor %}
+
 <p>
   <h3>Ainekset:</h3>
   {{ item.ingredients }}
@@ -37,6 +38,9 @@
 </p>
 {% endif %}
 <h3>Arvostelut</h3>
+<p>
+  Arvosana: {{ average }} / 5
+</p>
 <p>
   <ul>
     {% for review in reviews %}

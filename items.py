@@ -23,12 +23,28 @@ def get_reviews(item_id):
             FROM reviews, users
             WHERE reviews.item_id = ?
             AND reviews.user_id = users.id
-            ORDER BY reviews.id DESC"""
+            ORDER BY reviews.id DESC
+"""
     return db.query(sql, [item_id])
 
+def get_average(item_id):
+    sql = """SELECT AVG(stars)
+            FROM reviews
+            WHERE item_id = ?
+"""
+    return db.query(sql, [item_id])[0][0]
+
 def get_items():
-    sql = "SELECT id, title FROM items ORDER BY title"
-            
+    sql = """SELECT items.id, items.title, 
+                    users.id user_id, users.username,
+                    AVG(reviews.stars) average_stars
+            FROM items JOIN users ON items.user_id = users.id
+                       LEFT JOIN reviews ON items.id = reviews.item_id
+            WHERE items.user_id = users.id
+            AND items.id = reviews.item_id
+            GROUP BY items.id
+            ORDER BY title
+"""
     return db.query(sql)
 
 def get_images(item_id):
@@ -64,32 +80,20 @@ def get_all_classes():
 
 
 def get_item(item_id):
-    sql = """SELECT 
-                I.id,
-                I.title,
-                I.ingredients,
-                I.instructions,
-                U.id user_id,
-                U.username
-            FROM 
-                items I, users U
-            WHERE
-                I.user_id = U.id
-            AND
-                I.id = ?
-        """
+    sql = """SELECT I.id, I.title, I.ingredients,
+                    I.instructions, U.id user_id, U.username
+            FROM items I, users U
+            WHERE I.user_id = U.id
+            AND I.id = ?
+"""
     result = db.query(sql, [item_id])
     return result[0] if result else None
 
 def update_item(item_id, title, ingredients, instructions, classes):
-    sql = """UPDATE
-                items
-            SET
-                title = ?,
-                ingredients = ?,
-                instructions = ?
-            WHERE
-                id = ? """
+    sql = """UPDATE items
+            SET title = ?, ingredients = ?, instructions = ?
+            WHERE id = ?
+"""
     db.execute(sql, [title, ingredients, instructions, item_id])
 
     sql = "DELETE FROM item_classes WHERE item_id = ?"
@@ -108,14 +112,11 @@ def remove_item(item_id):
     db.execute(sql, [item_id])
 
 def find_items(query):
-    sql = """SELECT
-                id, title
-            FROM
-                items
-            WHERE
-                title LIKE ? OR ingredients LIKE ?
-            ORDER BY
-                id DESC
-            """
+    sql = """SELECT id, title
+            FROM items
+            WHERE title LIKE ?
+            OR ingredients LIKE ?
+            ORDER BY id DESC
+"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])

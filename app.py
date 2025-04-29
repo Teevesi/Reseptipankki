@@ -41,8 +41,9 @@ def show_item(item_id):
     classes = items.get_classes(item_id)
     reviews = items.get_reviews(item_id)
     images = items.get_images(item_id)
+    average = items.get_average(item_id)
     return render_template("show_item.html", item=item, classes=classes,
-                            reviews=reviews, images=images)
+                            reviews=reviews, images=images, average=average)
 
 @app.route("/images/<int:item_id>")
 def edit_images(item_id):
