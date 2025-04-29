@@ -53,9 +53,7 @@ def edit_images(item_id):
         abort(404)
     if item["user_id"] != session["user_id"]:
         abort(403)
-
     images = items.get_images(item_id)
-
     return render_template("images.html", item=item, images=images)
 
 @app.route("/add_image", methods=["POST"])
@@ -63,6 +61,8 @@ def add_image():
     require_login()
     item_id = request.form["item_id"]
     item = items.get_item(item_id)
+    if "back" in request.form:
+        return redirect("/item/" + str(item_id))
     if not item:
         abort(404)
     if item["user_id"] != session["user_id"]:
@@ -182,8 +182,8 @@ def update_item():
             if class_value not in all_classes[class_title]:
                 abort(403)
             classes.append((class_title, class_value))
-
-    items.update_item(item_id, title, ingredients, instructions, classes)
+    if "edit" in request.form:
+        items.update_item(item_id, title, ingredients, instructions, classes)
     return redirect("/item/" + str(item_id))
 
 @app.route("/remove_item/<int:item_id>", methods=["GET", "POST"])

@@ -6,6 +6,9 @@
 
 <h2>Reseptin kuvat</h2>
 <p>
+  <h3>{{ item.title }}</h3>
+</p>
+<p>
   Ilmoituksessa on {{ images | count }} kuvaa.
 </p>
 <form action="/remove_images" method="post">
@@ -25,10 +28,8 @@
     Kuva: <input type="file" name="image" accept=".png" />
   </p>
   <input type="hidden" name="item_id" value="{{ item.id }}" >
-  <input type="submit" value="Lähetä" />
+  <input type="submit" name="change" value="Lähetä" />
+  <input type="submit" name="back" value="Palaa takaisin" />
 </form>
-<p>
-  <a href="/item/{{ item.id }}">Takaisin</a>
-</p>
 
 {% endblock %}
