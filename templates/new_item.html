@@ -7,21 +7,21 @@
 <h2>Uusi resepti</h2>
 <form action="/create_item" method="post">
   <p>
-    Reseptin nimi: <br />
-    <input type="text" name="title" maxlength="50" required/>
+    <label for="title">Reseptin nimi:</label><br />
+    <input type="text" name="title" id="title" maxlength="50" required/>
   </p>
   <p>
-    Ainekset: <br />
-    <textarea name = "ingredients" rows="8" cols="40" maxlength="2000" required></textarea>
+    <label for="ingredients">Ainekset:</label> <br />
+    <textarea name = "ingredients" id="ingredients" rows="8" cols="40" maxlength="2000" required></textarea>
   </p>
   <p>
-    Ohjeet: <br />
-    <textarea name = "instructions" rows="8" cols="40" maxlength="2000" required></textarea>
+    <label for="instructions">Ohjeet:</label> <br />
+    <textarea name = "instructions" id="instructions" rows="8" cols="40" maxlength="2000" required></textarea>
   </p>
   {% for class in classes %}
   <p>
-    {{ class }}: <br />
-    <select name="classes">
+    <label for="class{{ class }}">{{ class }}</label> <br />
+    <select name="classes" id="class{{ class }}">
       <option value="">[valitse]</option>
     {% for option in classes[class] %}
     <option value="{{ class }}:{{ option }}">{{ option }}</option>

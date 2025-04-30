@@ -10,23 +10,23 @@
 </p>
 <form action="/update_item" method="post">
   <p>
-    Reseptin nimi: <br />
-    <input type="text" name="title" value="{{ item.title }}" max="50" required/>
+    <label for="title">Reseptin nimi:</label><br />
+    <input type="text" name="title" id="title" value="{{ item.title }}" max="50" required/>
   </p>
   <p>
-    Ainekset: <br />
-    <textarea name = "ingredients" rows="8" cols="40" max="2000" required>{{ item.ingredients }}</textarea>
+    <label for="ingredients">Ainekset:</label> <br />
+    <textarea name = "ingredients" id="ingredients" rows="8" cols="40" max="2000" required>{{ item.ingredients }}</textarea>
   </p>
   <p>
-    Ohjeet: <br />
-    <textarea name = "instructions" rows="8" cols="40" max="2000" required>{{ item.instructions }}</textarea>
+    <label for="instructions">Ohjeet:</label> <br />
+    <textarea name = "instructions" id="instructions" rows="8" cols="40" max="2000" required>{{ item.instructions }}</textarea>
   </p>
   <input type="hidden" name="item_id" value="{{ item.id }}"/>
 
   {% for class in all_classes %}
   <p>
-    {{ class }}: <br />
-    <select name="classes">
+    <label for="class{{ class }}">{{ class }}</label> <br />
+    <select name="classes" id="class{{ class }}">
       <option value="">[valitse]</option>
     {% for option in all_classes[class] %}
       {% if classes[class] == option %}
