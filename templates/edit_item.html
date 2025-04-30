@@ -38,7 +38,7 @@
   </select>
   </p>
   {% endfor %}
-
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" name="edit" value="Päivitä resepti" />
   <input type="submit" name="back" value="Palaa takaisin" />
 </form>
