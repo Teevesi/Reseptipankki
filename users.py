@@ -8,11 +8,16 @@ def get_user(user_id):
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
+
 def get_items(user_id):
-    sql = """SELECT id, title
-            FROM items
-            WHERE user_id = ?
-            ORDER BY id DESC"""
+    sql= """SELECT items.id, items.title,
+                    users.id user_id, users.username,
+                    AVG(reviews.stars) average_stars
+            FROM items JOIN users ON items.user_id = ?
+                       LEFT JOIN reviews ON items.id = reviews.item_id
+            GROUP BY items.id
+            ORDER BY items.id DESC
+"""
     return db.query(sql, [user_id])
 
 def create_user(username, password):

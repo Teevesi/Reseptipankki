@@ -39,6 +39,7 @@ def show_user(user_id):
     if not user:
         abort(404)
     items = users.get_items(user_id)
+    
     return render_template("show_user.html", user=user, items= items)
 
 @app.route("/new_item")

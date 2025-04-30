@@ -3,9 +3,8 @@
 {% block title %}Reseptipankki{% endblock %}
 
 {% block content %}
+
 <h2>Reseptit</h2>
-
-
 {% for item in items %}
 <div class="item">
   <a href="/item/{{ item.id }}">{{ item.title }}</a> <br />

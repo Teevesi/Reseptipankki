@@ -9,12 +9,16 @@
 <p>
   Käyttäjä on tehnyt {{ items | count}} reseptiä
 </p>
-<h2>Reseptit:</h2>
-
-<ul>
-  {% for item in items %}
-  <li><a href="/item/{{ item.id }}">{{ item.title }}</a></li>
-  {% endfor %}
-</ul>
+<h2>Reseptit</h2>
+{% for item in items %}
+<div class="item">
+  <a href="/item/{{ item.id }}">{{ item.title }}</a> <br />
+  {% if item.average_stars %}
+  Arvosana: {{ item.average_stars }} / 5
+  {% else %}
+  Arvosana: 0 / 5
+  {% endif %}
+</div>
+{% endfor %}
 
 {% endblock %}
