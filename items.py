@@ -7,10 +7,10 @@ def add_item(title, ingredients, instructions, user_id, classes):
 
     item_id = db.last_insert_id()
 
-    sql = """INSERT INTO item_classes (item_id, title, value) 
+    sql = """INSERT INTO item_classes (item_id, title, value)
             VALUES (?, ?, ?)"""
-    for title, value in classes:
-        db.execute(sql, [item_id, title, value])
+    for item_title, item_value in classes:
+        db.execute(sql, [item_id, item_title, item_value])
     return item_id
 
 def add_review(item_id, user_id, review_rating, review_comment):
@@ -36,7 +36,7 @@ def get_average(item_id):
     return db.query(sql, [item_id])[0][0]
 
 def get_items():
-    sql = """SELECT items.id, items.title, 
+    sql = """SELECT items.id, items.title,
                     users.id user_id, users.username,
                     AVG(reviews.rating) average_rating
             FROM items JOIN users ON items.user_id = users.id
@@ -98,10 +98,10 @@ def update_item(item_id, title, ingredients, instructions, classes):
     sql = "DELETE FROM item_classes WHERE item_id = ?"
     db.execute(sql, [item_id])
 
-    sql = """INSERT INTO item_classes (item_id, title, value) 
+    sql = """INSERT INTO item_classes (item_id, title, value)
             VALUES (?, ?, ?)"""
-    for title, value in classes:
-        db.execute(sql, [item_id, title, value])
+    for class_title, class_value in classes:
+        db.execute(sql, [item_id, class_title, class_value])
 
 def remove_item(item_id):
     sql = """DELETE FROM item_classes WHERE item_id = ?"""

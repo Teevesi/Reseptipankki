@@ -1,12 +1,14 @@
 import sqlite3
-from flask import Flask
-from flask import redirect, flash, make_response, render_template, request, session, abort
-import config
-import items
-import users
 import re
 import secrets
 import markupsafe
+
+from flask import Flask
+from flask import redirect, flash, make_response, render_template, request, session, abort
+
+import config
+import items
+import users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -37,9 +39,9 @@ def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    items = users.get_items(user_id)
+    user_items = users.get_items(user_id)
 
-    return render_template("show_user.html", user=user, items= items)
+    return render_template("show_user.html", user=user, items=user_items)
 
 @app.route("/new_item")
 def new_item():
@@ -158,8 +160,7 @@ def remove_item(item_id):
         if "remove" in request.form:
             items.remove_item(item_id)
             return redirect("/")
-        else:
-            return redirect("/item/" + str(item_id))
+        return redirect("/item/" + str(item_id))
 
 @app.route("/find_item")
 def find_item():
@@ -247,7 +248,6 @@ def show_image(image_id):
     image = items.get_image(image_id)
     if not image:
         abort(404)
-
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/png")
     return response
@@ -274,8 +274,6 @@ def create():
         flash("VIRHE: tunnus varattu")
         return redirect("/register")
     return redirect("/")
-
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
