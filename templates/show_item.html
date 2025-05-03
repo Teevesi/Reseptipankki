@@ -43,7 +43,7 @@
 <p>
   <ul>
     {% for review in reviews %}
-    <li>{{ review.stars }}/5, {{ review.comment }}, <a href="/user/{{ review.user_id }}">{{ review.username }}</a></li>
+    <li>{{ review.rating }}/5, {{ review.comment }}, <a href="/user/{{ review.user_id }}">{{ review.username }}</a></li>
     {% endfor %}
   </ul>
 </p>
@@ -52,8 +52,8 @@
 <form action="/create_review" method="post">
   <input type="hidden" name="item_id" value="{{ item.id }}">
   <p>
-    <label for="review_stars">Arvio:</label>
-    <input type="text" name="review_stars" id="review_stars" size="8" pattern="[1-5]" required /> /5
+    <label for="review_rating">Arvio:</label>
+    <input type="text" name="review_rating" id="review_rating" size="8" pattern="[1-5]" required /> /5
   </p>
   <p>
     <label for="review_comment">Kommentti:</label>

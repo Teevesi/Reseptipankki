@@ -13,13 +13,13 @@ def add_item(title, ingredients, instructions, user_id, classes):
         db.execute(sql, [item_id, title, value])
     return item_id
 
-def add_review(item_id, user_id, review_stars, review_comment):
-    sql = """INSERT INTO reviews (item_id, user_id, stars, comment)
+def add_review(item_id, user_id, review_rating, review_comment):
+    sql = """INSERT INTO reviews (item_id, user_id, rating, comment)
              VALUES (?, ?, ?, ?)"""
-    db.execute(sql, [item_id, user_id, review_stars, review_comment])
+    db.execute(sql, [item_id, user_id, review_rating, review_comment])
 
 def get_reviews(item_id):
-    sql = """SELECT reviews.stars, reviews.comment,
+    sql = """SELECT reviews.rating, reviews.comment,
                     users.id user_id, users.username
             FROM reviews, users
             WHERE reviews.item_id = ?
@@ -29,7 +29,7 @@ def get_reviews(item_id):
     return db.query(sql, [item_id])
 
 def get_average(item_id):
-    sql = """SELECT AVG(stars)
+    sql = """SELECT AVG(rating)
             FROM reviews
             WHERE item_id = ?
 """
@@ -38,7 +38,7 @@ def get_average(item_id):
 def get_items():
     sql = """SELECT items.id, items.title, 
                     users.id user_id, users.username,
-                    AVG(reviews.stars) average_stars
+                    AVG(reviews.rating) average_rating
             FROM items JOIN users ON items.user_id = users.id
                        LEFT JOIN reviews ON items.id = reviews.item_id
             GROUP BY items.id

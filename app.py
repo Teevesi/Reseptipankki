@@ -1,7 +1,6 @@
 import sqlite3
 from flask import Flask
 from flask import redirect, flash, make_response, render_template, request, session, abort
-import db
 import config
 import items
 import users
@@ -39,7 +38,7 @@ def show_user(user_id):
     if not user:
         abort(404)
     items = users.get_items(user_id)
-    
+
     return render_template("show_user.html", user=user, items= items)
 
 @app.route("/new_item")
@@ -59,67 +58,6 @@ def show_item(item_id):
     average = items.get_average(item_id)
     return render_template("show_item.html", item=item, classes=classes,
                             reviews=reviews, images=images, average=average)
-
-@app.route("/images/<int:item_id>")
-def edit_images(item_id):
-    require_login()
-    item = items.get_item(item_id)
-    if not item:
-        abort(404)
-    if item["user_id"] != session["user_id"]:
-        abort(403)
-    images = items.get_images(item_id)
-    return render_template("images.html", item=item, images=images)
-
-@app.route("/add_image", methods=["POST"])
-def add_image():
-    require_login()
-    check_csrf()
-    item_id = request.form["item_id"]
-    item = items.get_item(item_id)
-    if "back" in request.form:
-        return redirect("/item/" + str(item_id))
-    if not item:
-        abort(404)
-    if item["user_id"] != session["user_id"]:
-        abort(403)
-    file = request.files["image"]
-    if not file.filename.endswith(".png"):
-        flash("VIRHE: väärä tiedostomuoto")
-        return redirect("/images/" + str(item_id))
-    image = file.read()
-    if len(image) > 1000 * 1024:
-        flash("VIRHE: liian suuri kuva")
-        return redirect("/images/" + str(item_id))
-
-    items.add_image(item_id, image)
-    return redirect("/images/" + str(item_id))
-
-@app.route("/remove_images", methods=["POST"])
-def remove_images():
-    require_login()
-    check_csrf()
-    item_id = request.form["item_id"]
-    item = items.get_item(item_id)
-    if not item:
-        abort(404)
-    if item["user_id"] != session["user_id"]:
-        abort(403)
-
-    for image_id in request.form.getlist("image_id"):
-        items.remove_image(item_id, image_id)
-
-    return redirect("/images/" + str(item_id))
-
-@app.route("/image/<int:image_id>")
-def show_image(image_id):
-    image = items.get_image(image_id)
-    if not image:
-        abort(404)
-
-    response = make_response(bytes(image))
-    response.headers.set("Content-Type", "image/png")
-    return response
 
 @app.route("/create_item", methods=["POST"])
 def create_item():
@@ -237,8 +175,8 @@ def find_item():
 def create_review():
     require_login()
     check_csrf()
-    review_stars = request.form["review_stars"]
-    if not review_stars and not re.search("^[1-5]$", review_stars):
+    review_rating = request.form["review_rating"]
+    if not review_rating and not re.search("^[1-5]$", review_rating):
         abort(403)
     review_comment = request.form["review_comment"]
     if len(review_comment) > 1000:
@@ -249,9 +187,70 @@ def create_review():
         abort(403)
     user_id = session["user_id"]
 
-    items.add_review(item_id, user_id, review_stars, review_comment)
+    items.add_review(item_id, user_id, review_rating, review_comment)
 
     return redirect("/item/" + str(item_id))
+
+@app.route("/images/<int:item_id>")
+def edit_images(item_id):
+    require_login()
+    item = items.get_item(item_id)
+    if not item:
+        abort(404)
+    if item["user_id"] != session["user_id"]:
+        abort(403)
+    images = items.get_images(item_id)
+    return render_template("images.html", item=item, images=images)
+
+@app.route("/add_image", methods=["POST"])
+def add_image():
+    require_login()
+    check_csrf()
+    item_id = request.form["item_id"]
+    item = items.get_item(item_id)
+    if "back" in request.form:
+        return redirect("/item/" + str(item_id))
+    if not item:
+        abort(404)
+    if item["user_id"] != session["user_id"]:
+        abort(403)
+    file = request.files["image"]
+    if not file.filename.endswith(".png"):
+        flash("VIRHE: väärä tiedostomuoto")
+        return redirect("/images/" + str(item_id))
+    image = file.read()
+    if len(image) > 1000 * 1024:
+        flash("VIRHE: liian suuri kuva")
+        return redirect("/images/" + str(item_id))
+
+    items.add_image(item_id, image)
+    return redirect("/images/" + str(item_id))
+
+@app.route("/remove_images", methods=["POST"])
+def remove_images():
+    require_login()
+    check_csrf()
+    item_id = request.form["item_id"]
+    item = items.get_item(item_id)
+    if not item:
+        abort(404)
+    if item["user_id"] != session["user_id"]:
+        abort(403)
+
+    for image_id in request.form.getlist("image_id"):
+        items.remove_image(item_id, image_id)
+
+    return redirect("/images/" + str(item_id))
+
+@app.route("/image/<int:image_id>")
+def show_image(image_id):
+    image = items.get_image(image_id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/png")
+    return response
 
 @app.route("/register")
 def register():

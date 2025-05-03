@@ -12,7 +12,7 @@ def get_user(user_id):
 def get_items(user_id):
     sql= """SELECT items.id, items.title,
                     users.id user_id, users.username,
-                    AVG(reviews.stars) average_stars
+                    AVG(reviews.rating) average_rating
             FROM items JOIN users ON items.user_id = ?
                        LEFT JOIN reviews ON items.id = reviews.item_id
             GROUP BY items.id
