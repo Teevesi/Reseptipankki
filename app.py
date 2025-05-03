@@ -269,7 +269,7 @@ def create():
     except sqlite3.IntegrityError:
         flash("VIRHE: tunnus varattu")
         return redirect("/register")
-    return render_template("create.html")
+    return redirect("/")
 
 
 
